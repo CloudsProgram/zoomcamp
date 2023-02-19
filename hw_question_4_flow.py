@@ -38,7 +38,7 @@ def write_gcs(path: Path) -> None:
     gcs_block.upload_from_path(from_path=f"{path}", to_path=path)
     return
 
-@flow()
+@flow(log_prints=True)
 def etl_web_to_gcs(color:str, year:int, month:int) -> None:
     """The main ETL function"""
     dataset_file = f"{color}_tripdata_{year}-{month:02}"
@@ -46,6 +46,7 @@ def etl_web_to_gcs(color:str, year:int, month:int) -> None:
     
     df = fetch(dataset_url)
     df_clean = clean(df)
+    print(len(df_clean))
     path = write_local(df_clean, color, dataset_file)
     write_gcs(path)
 
